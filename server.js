@@ -1,33 +1,19 @@
-const express = require('express');
-const puppeteer = require('puppeteer');
-const dotenv = require('dotenv');
-dotenv.config();
+// server.js — minimal, no Puppeteer
+const express = require("express");
+const path = require("path");
 
 const app = express();
 app.use(express.json());
-app.use(express.static('public'));
 
+// serve the /public folder (so / shows public/index.html)
+app.use(express.static(path.join(__dirname, "public")));
+
+app.get("/api/hello", (req, res) => {
+  res.json({ message: "Bot is running!" });
+});
+
+// IMPORTANT: listen on Render's port
 const PORT = process.env.PORT || 8080;
-
-// Test route
-app.get('/api/hello', (req, res) => {
-  res.json({ message: 'Bot is running!' });
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
-
-// Example repost route
-app.post('/api/repost', async (req, res) => {
-  const { url } = req.body;
-  try {
-    const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
-    const page = await browser.newPage();
-    await page.goto('https://www.leboncoin.fr');
-    // TODO: Implement login and repost logic here
-    await browser.close();
-    res.json({ success: true, url });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
