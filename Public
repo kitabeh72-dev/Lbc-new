@@ -1,12 +1,10 @@
-Index.html
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <title>Leboncoin Reposter</title>
-</head>
-<body>
-  <h1>Leboncoin Reposter Dashboard</h1>
-  <p>If you see this page, the server is running.</p>
-</body>
-</html>
+<form onsubmit="event.preventDefault(); runLoginTest();">
+  <button type="submit">Test Leboncoin Login</button>
+</form>
+<script>
+async function runLoginTest() {
+  const r = await fetch('/api/login-test', { method: 'POST' });
+  const j = await r.json();
+  alert(j.ok ? 'Login OK ✅' : `Login failed ❌: ${j.error || j.message}`);
+}
+</script>
